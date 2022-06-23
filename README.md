@@ -10,7 +10,7 @@ This neural network architecture is especially designed to deal with severe defo
 
 <img src="./Figures/PVF-DPR.png" alt="Proposed Pyramid View Fusion and Deformable Pyramid Reception modules." width="500">
 
-
+---
 
 **Overall architecture of the proposed DeepPyram network:**
 
