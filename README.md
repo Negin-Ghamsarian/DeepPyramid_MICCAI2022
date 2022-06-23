@@ -4,7 +4,7 @@ This repository provides the official PyTorch implementation of DeepPyram (Pyram
 
 DeepPyram is initially proposed for semantic segmentation in cataract surgery videos, but can be adopted for any medical or general purpose image segmentation problem.
 
-This neural network architecture is especially designed to deal with severe deformations and scale variations by fusing sequential and parallel feature maps adaptively.
+Our proposed network, {\it DeepPyram}, introduces three key contributions: (i) a Pyramid View Fusion (PVF) module allowing a varying-angle surrounding view of the feature maps for each pixel position, (ii) a Deformable Pyramid Reception (DPR) module, which enables a large, sparse, and learnable receptive field to perform shape-wise feature extraction (see Fig.~\ref{fig: Problems}-b), and (iii) a Pyramid Loss, ($P\mathcal{L}$) to explicitly supervise multi-scale semantic feature maps in our network.
 
 ---
 
@@ -36,7 +36,14 @@ View Fusion (PVF) modules." width="1000">
 
 **Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU.**
 
-<img src="./Figures/IoU_Comparison.png" alt="Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU." width="1200">
+<img src="./Figures/IoU_Comparison.png" alt="Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU." width="1000">
+
+---
+
+**Quantitative comparison of segmentation results for the proposed (DeepPyram) and rival architectures (some minimum
+and average values are not visible due to y-axis clipping).**
+
+<img src="./Figures/Dice_Comparison.png" alt="Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU." width="1000">
 
 ## Citation
 If you use AdaptNet for your research, please cite our paper:
