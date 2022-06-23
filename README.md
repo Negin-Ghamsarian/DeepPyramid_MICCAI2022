@@ -11,6 +11,7 @@ This neural network architecture is especially designed to deal with severe defo
 **Proposed Pyramid View Fusion and Deformable Pyramid Reception modules.**
 
 Conceptually, the PVF module is inspired by the human visual system and aims to recognize semantic information found in images considering not only the internal object's content but also the relative information between the object and its surrounding area. Thus the role of the PVF is to reinforce the observation of relative information at every distinct pixel position. Specifically, we use average pooling to fuse the multi-angle local information for this novel attention mechanism. 
+
 Conversely, our DPR module hinges on a novel deformable block based on dilated convolutions that can help recognize each pixel position's semantic label based on its cross-dependencies with varying-distance surrounding pixels without imposing additional trainable parameters. Due to the inflexible rectangle shape of the receptive field in regular convolutional layers, the feature extraction procedure cannot be adapted to complex deformable shapes. Our proposed dilated deformable convolutional layers attempt to remedy this explicitly in terms of both scale and shape. We now specify these modules and our loss function in the following subsections. 
 
 <img src="./Figures/PVF-DPR.png" alt="Proposed Pyramid View Fusion and Deformable Pyramid Reception modules." width="500">
