@@ -1,19 +1,11 @@
-# -*- coding: utf-8 -*-
-
-
-
 import torchvision.models as models
-from torchsummary import summary
 import torch.nn as nn
 import torch
 from torchvision.ops import DeformConv2d
 
-
-
-
-class VGG_Separate(nn.Module):
+class VGG16_Separate(nn.Module):
     def __init__(self):
-        super(VGG_Separate,self).__init__()
+        super(VGG16_Separate,self).__init__()
 
         vgg_model = models.vgg16(pretrained=True)
         self.Conv1 = nn.Sequential(*list(vgg_model.features.children())[0:4])
@@ -33,7 +25,33 @@ class VGG_Separate(nn.Module):
         return out1, out2, out3, out4, out5
         
                 
+class ResNet50_Separate(nn.Module):
+    def __init__(self):
+        super(ResNet50_Separate,self).__init__()
+        
+        resnet = models.resnet50(pretrained=True)
 
+        self.firstconv = resnet.conv1
+        self.firstbn = resnet.bn1
+        self.firstrelu = resnet.relu
+        self.firstmaxpool = resnet.maxpool
+        self.encoder1 = resnet.layer1
+        self.encoder2 = resnet.layer2
+        self.encoder3 = resnet.layer3
+        self.encoder4 = resnet.layer4
+        
+        
+    def forward(self, x):
+         
+        out1 = self.firstrelu(self.firstbn(self.firstconv(x)))
+        out11 = self.firstmaxpool(out1)
+        out2 = self.encoder1(out11)
+        out3 = self.encoder2(out2)
+        out4 = self.encoder3(out3)
+        out5 = self.encoder4(out4)       
+        
+        return out1, out2, out3, out4, out5  
+           
 
 class PoolUp(nn.Module):
       def __init__(self, input_channels, pool_kernel_size, reduced_channels):
@@ -67,7 +85,7 @@ class Pool_pixelWise(nn.Module):
 
 
 
-class PGA1(nn.Module):
+class PVF(nn.Module):
     def __init__(self, input_channels, pool_sizes, dim):
         super().__init__()
         
@@ -85,7 +103,6 @@ class PGA1(nn.Module):
         self.conv2 = nn.Conv2d(output_channels, reduced_channels, kernel_size=1, padding=0)
         self.conv3 = nn.Conv2d(output_channels, reduced_channels, kernel_size=1, padding=0)
         self.conv4 = nn.Conv2d(output_channels, reduced_channels, kernel_size=1, padding=0)
-
         
         self.fc = nn.Conv2d(input_channels, input_channels, kernel_size=3, padding=1, groups=input_channels)
         self.norm = nn.LayerNorm([dim,dim])
@@ -111,7 +128,6 @@ class PGA1(nn.Module):
 
 
 class Up(nn.Module):
-    """Upscaling then double conv"""
 
     def __init__(self, in_channels, out_channels, dilations, bilinear=True):
         super().__init__()
@@ -119,7 +135,7 @@ class Up(nn.Module):
         # if bilinear, use the normal convolutions to reduce the number of channels
         if bilinear:
             self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
-            self.conv = DoubleConv(in_channels, out_channels, dilations)
+            self.conv = DPR(in_channels, out_channels, dilations)
             
 
     def forward(self, x1, x2):
@@ -129,7 +145,7 @@ class Up(nn.Module):
 
 
     
-class Deform(nn.Module):
+class DeformableBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, dilate):
         super().__init__()
         
@@ -147,15 +163,14 @@ class Deform(nn.Module):
         return out
 
 
-class DoubleConv(nn.Module):
-    """(convolution => [BN] => ReLU) * 2"""
+class DPR(nn.Module):
 
     def __init__(self, in_channels, out_channels, dilations):
         super().__init__()
            
         self.conv0 = nn.Conv2d(in_channels, in_channels//4, kernel_size=3, padding=1)
-        self.conv1 = Deform(in_channels, in_channels//8, kernel_size=3, dilate = dilations[0])
-        self.conv2 = Deform(in_channels, in_channels//8, kernel_size=3, dilate = dilations[1])
+        self.conv1 = DeformableBlock(in_channels, in_channels//8, kernel_size=3, dilate = dilations[0])
+        self.conv2 = DeformableBlock(in_channels, in_channels//8, kernel_size=3, dilate = dilations[1])
         
         self.out = nn.Sequential(
                    nn.BatchNorm2d(in_channels//2),
@@ -184,76 +199,4 @@ class OutConv(nn.Module):
         self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=1)
 
     def forward(self, x):
-        return self.conv(x)        
-
-
-class DeepPyram_VGG16_Without_PL(nn.Module):
-    def __init__(self, n_channels, n_classes, bilinear=True):
-        super(DeepPyram_VGG16_Without_PL, self).__init__()
-
-        self.n_channels = n_channels
-        self.n_classes = n_classes
-        self.bilinear = bilinear
-
-        self.Backbone = VGG_Separate()
-
-        self.glob1 = PGA1(input_channels=512, pool_sizes=[32, 9, 7, 5], dim=32)
-        
-        self.glob2 = PGA1(input_channels=256, pool_sizes=[64, 9, 7, 5], dim=64)
-        self.glob3 = PGA1(input_channels=128, pool_sizes=[128, 9, 7, 5], dim=128)
-        self.glob4 = PGA1(input_channels=64, pool_sizes=[256, 9, 7, 5], dim=256)
-
-        self.up1 = Up(1024, 256, [3, 6, 7], bilinear)
-        self.up2 = Up(512, 128, [3, 6, 7], bilinear)
-        self.up3 = Up(256, 64, [3, 6, 7], bilinear)
-        self.up4 = Up(128, 32, [3, 6, 7], bilinear)
-
-        self.outc = OutConv(32, n_classes)
-        #self.mask0 = nn.Conv2d(512, 1, kernel_size=3, padding=1)
-        #self.mask1 = nn.Conv2d(256, 1, kernel_size=3, padding=1)
-        #self.mask2 = nn.Conv2d(128, 1, kernel_size=3, padding=1)
-        #self.mask3 = nn.Conv2d(64, 1, kernel_size=3, padding=1)
-
-
-    def forward(self, x):
-        
-        out5, out4, out3, out2, out1 = self.Backbone(x)        
-
-        out1 = self.glob1(out1)
-        
-        x1 = self.up1(out1, out2)
-        x1 = self.glob2(x1)
-
-        x2 = self.up2(x1, out3)
-        x2 = self.glob3(x2)
- 
-        x3 = self.up3(x2, out4)
-        x3 = self.glob4(x3)
-
-        x4 = self.up4(x3, out5)
-        
-        
-
-        
-        logits = self.outc(x4)
-        #print(logits.shape)
-        
-        #mask0 = self.mask0(out5)        
-        '''mask1 = self.mask1(x1)
-        mask2 = self.mask2(x2)
-        mask3 = self.mask3(x3)'''
-
-        return logits#, mask1, mask2, mask3
-
-    
-    
-    
-if __name__ == '__main__':
-    model = DeepPyram_VGG16_Without_PL(n_channels=3, n_classes=1)
-
-    template = torch.ones((1, 3, 512, 512))
-    detection= torch.ones((1, 1, 512, 512))
-    
-    y1 = model(template)
-    print(y1.shape)
-    print(summary(model, (3,512,512))) 
+        return self.conv(x)    
