@@ -14,6 +14,8 @@ This neural network architecture is especially designed to deal with severe defo
 
 **Overall architecture of the proposed DeepPyram network:**
 
+Using a U-Net-based architecture, our proposed model is illustrated in Fig.~\ref{fig: Block_diagram}. At its core, the encoder network remains that of a standard VGG16 network. Our approach is to provide useful decoder modules to help alleviate segmentation concerning relevant objects' features in cataract surgery \footnote{Since changing the encoder network entails pretraining on a large dataset (such as ImageNet), which in turn imposes more computational costs, we only add the proposed modules after the bottleneck. Nevertheless, since these modules are applied to concatenated features coming from the encoder network via skip connections, the encoder features can be effectively guided.}. Specifically, we propose a Pyramid View Fusion (PVF) module and a Deformable Pyramid Reception (DPR) module. These are then trained using a dedicated Pyramid Loss ($P\mathcal{L}$). 
+
 <img src="./Figures/BD.png" alt="Overall architecture of the proposed DeepPyram network." width="1000">
 
 ---
