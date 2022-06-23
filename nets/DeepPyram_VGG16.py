@@ -207,9 +207,15 @@ class DeepPyram_VGG16(nn.Module):
 
 
         if self.Pyramid_Loss:
+            print("Pyramid Loss activated in the network")
             self.mask1 = nn.Conv2d(256, 1, kernel_size=3, padding=1)
             self.mask2 = nn.Conv2d(128, 1, kernel_size=3, padding=1)
             self.mask3 = nn.Conv2d(64, 1, kernel_size=3, padding=1)
+
+        else:
+            print("Pyramid Loss is deactivated in the network")
+            print("You can activate it by setting Pyramid_Loss=True when initializing the network")
+
 
 
     def forward(self, x):
@@ -246,11 +252,23 @@ class DeepPyram_VGG16(nn.Module):
     
     
 if __name__ == '__main__':
-    model = DeepPyram_VGG16(n_channels=3, n_classes=1, bilinear=True, Pyramid_Loss=True)
 
     template = torch.ones((1, 3, 512, 512))
-    detection= torch.ones((1, 1, 512, 512))
     
-    y1 = model(template)
-    print(y1.shape)
-    print(summary(model, (3,512,512))) 
+    model_without_PyramidLoss = DeepPyram_VGG16(n_channels=3, n_classes=1, bilinear=True, Pyramid_Loss=False)
+    y = model_without_PyramidLoss(template)
+    print(f'Output Shape: {y.shape}')
+
+    print('Model summary without pyramid loss:')
+    print(summary(model_without_PyramidLoss, (3,512,512))) 
+
+
+    model_with_PyramidLoss = DeepPyram_VGG16(n_channels=3, n_classes=1, bilinear=True, Pyramid_Loss=True)
+    y, y1, y2, y3 = model_with_PyramidLoss(template)
+    print(f'Output Shape of the main branch: {y.shape}')
+    print(f'Output Shape of the first branch of the pyramid loss module: {y1.shape}')
+    print(f'Output Shape of the second branch of the pyramid loss module: {y2.shape}')
+    print(f'Output Shape of the third branch of the pyramid loss module: {y3.shape}')
+
+    print('Model summary with pyramid loss:')
+    print(summary(model_with_PyramidLoss, (3,512,512))) 
