@@ -17,7 +17,8 @@ This neural network architecture is especially designed to deal with severe defo
 **Detailed architecture of the Deformable Pyramid Reception (DPR) and Pyramid
 View Fusion (PVF) modules:**
 
-<img src="./Network-Architecture-Images/CPF-SSF.png" alt="The detailed architecture of the CPF and SFF modules of AdaptNet." width="1000">
+<img src="./Figures/BD-DPR-PVF.png" alt="Detailed architecture of the Deformable Pyramid Reception (DPR) and Pyramid
+View Fusion (PVF) modules." width="1200">
 
 ## Citation
 If you use AdaptNet for your research, please cite our paper:
