@@ -20,6 +20,10 @@ View Fusion (PVF) modules:**
 <img src="./Figures/BD-DPR-PVF.png" alt="Detailed architecture of the Deformable Pyramid Reception (DPR) and Pyramid
 View Fusion (PVF) modules." width="1200">
 
+**Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU.**
+
+<img src="./Figures/IoU_Comparison.png" alt="Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU." width="1200">
+
 ## Citation
 If you use AdaptNet for your research, please cite our paper:
 
