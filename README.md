@@ -49,8 +49,7 @@ and average values are not visible due to y-axis clipping).**
 
 **Visualization of the effect of the proposed and alternative modules based on class activation maps. For each approach, the figures from left to right represent the gray-scale activation maps, heatmaps, and heatmaps on images for a representative input image from the test set.**
 
-<img src="./Figures/<img src="./Figures/Comparisons-ScoreCAM.png" alt="Visualization of the effect of the proposed and alternative modules based on class activation maps.." width="1000">
-.png" alt="Visualization of the effect of the proposed and alternative modules based on class activation maps." width="1000">
+<img src="./Figures/<img src=" " alt="Visualization of the effect of the proposed and alternative modules based on class activation maps." width="1000">
 
 ---
 
