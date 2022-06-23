@@ -40,10 +40,20 @@ View Fusion (PVF) modules." width="1000">
 
 ---
 
-**Quantitative comparison of segmentation results for the proposed (DeepPyram) and rival architectures (some minimum
+**Quantitative comparison of segmentation results for the proposed (DeepPyram) and rival architectures based on Dice coefficient (some minimum
 and average values are not visible due to y-axis clipping).**
 
 <img src="./Figures/Dice_Comparison.png" alt="Quantitative comparisons among DeepPyram and rival approaches based on average and standard deviation of IoU." width="1000">
+
+---
+
+**Visualization of the effect of the proposed and alternative modules based on class activation maps. For each approach, the figures from left to right represent the gray-scale activation maps, heatmaps, and heatmaps on images for a representative input image from the test set.**
+
+<img src="./Figures/<img src="./Figures/Dice_Comparison.png" alt="Visualization of the effect of the proposed and alternative modules based on class activation maps.." width="1000">
+.png" alt="Visualization of the effect of the proposed and alternative modules based on class activation maps." width="1000">
+
+---
+
 
 ## Citation
 If you use AdaptNet for your research, please cite our paper:
