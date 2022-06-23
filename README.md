@@ -6,13 +6,18 @@ DeepPyram is initially proposed for semantic segmentation in cataract surgery vi
 
 This neural network architecture is especially designed to deal with severe deformations and scale variations by fusing sequential and parallel feature maps adaptively.
 
-**Proposed Pyramid View Fusion and Deformable Pyramid Reception modules:**
+---
+
+**Proposed Pyramid View Fusion and Deformable Pyramid Reception modules.**
+
+Conceptually, the PVF module is inspired by the human visual system and aims to recognize semantic information found in images considering not only the internal object's content but also the relative information between the object and its surrounding area. Thus the role of the PVF is to reinforce the observation of relative information at every distinct pixel position. Specifically, we use average pooling to fuse the multi-angle local information for this novel attention mechanism. 
+Conversely, our DPR module hinges on a novel deformable block based on dilated convolutions that can help recognize each pixel position's semantic label based on its cross-dependencies with varying-distance surrounding pixels without imposing additional trainable parameters. Due to the inflexible rectangle shape of the receptive field in regular convolutional layers, the feature extraction procedure cannot be adapted to complex deformable shapes. Our proposed dilated deformable convolutional layers attempt to remedy this explicitly in terms of both scale and shape. We now specify these modules and our loss function in the following subsections. 
 
 <img src="./Figures/PVF-DPR.png" alt="Proposed Pyramid View Fusion and Deformable Pyramid Reception modules." width="500">
 
 ---
 
-**Overall architecture of the proposed DeepPyram network:**
+**Overall architecture of the proposed DeepPyram network.**
 
 Using a U-Net-based architecture, our proposed model is illustrated below. At its core, the encoder network remains that of a standard VGG16 network. Our approach is to provide useful decoder modules to help alleviate segmentation concerning relevant objects' features in cataract surgery. Specifically, we propose a Pyramid View Fusion (PVF) module and a Deformable Pyramid Reception (DPR) module. These are then trained using a dedicated Pyramid Loss ($P\mathcal{L}$). 
 
@@ -21,7 +26,7 @@ Using a U-Net-based architecture, our proposed model is illustrated below. At it
 ---
 
 **Detailed architecture of the Deformable Pyramid Reception (DPR) and Pyramid
-View Fusion (PVF) modules:**
+View Fusion (PVF) modules.**
 
 <img src="./Figures/BD-DPR-PVF.png" alt="Detailed architecture of the Deformable Pyramid Reception (DPR) and Pyramid
 View Fusion (PVF) modules." width="1000">
