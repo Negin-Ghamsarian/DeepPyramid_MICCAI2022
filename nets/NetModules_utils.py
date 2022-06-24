@@ -136,6 +136,10 @@ class Up(nn.Module):
         if bilinear:
             self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
             self.conv = DPR(in_channels, out_channels, dilations)
+
+        else:
+            raise Exception("Upscaling with other schemes rather than bilinear is not implemented")
+
             
 
     def forward(self, x1, x2):

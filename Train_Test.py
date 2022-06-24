@@ -6,40 +6,33 @@ Created on Fri Feb 25 13:43:53 2022
 @author: negin
 """
 
-import random ##
+import random 
 import argparse
-import logging ##
-import os ##
-import sys ##
+import logging 
+import os 
+import sys 
 import csv
+import numpy as np 
+from tqdm import tqdm 
+import wandb
+import importlib
 
-import numpy as np ##
-import torch ##
-import torch.nn as nn ##
-from torch import optim ##
-from tqdm import tqdm ##
+import torch 
+import torch.nn as nn 
+from torch import optim 
+from torch.utils.data import DataLoader
+
+from torchvision.transforms.functional import resize
 
 from utils.eval_dice_IoU_binary import eval_dice_IoU_binary
 from utils.save_metrics import save_metrics
-
-
 from utils.dataset_PyTorch import BasicDataset
-from torch.utils.data import DataLoader
-
-from torchvision import transforms
 from utils.losses_binary_ReduceMean import DiceBCELoss
 from utils.import_helper import import_config
-
-import wandb
 from utils.seed_initialization import seed_all, seed_worker
 
-
-import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', required=True)
-
-
-import importlib
 
 
 def create_directory(new_dir):
@@ -54,11 +47,13 @@ def train_net(net,
               batch_size=1,
               lr=0.001,
               device='cuda',
-              save_cp=True
+              save_cp=True,
+              Pyramid_Loss=True,
+              size = (512,512)
               ):
 
     TESTS = []
-    train_dataset = BasicDataset(dir_train_img, dir_train_mask)
+    train_dataset = BasicDataset(dir_train_img, dir_train_mask, size = size)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, pin_memory=False)
     n_train = len(train_dataset)
     inference_step = np.floor(np.ceil(n_train/batch_size)/test_per_epoch)
@@ -97,6 +92,11 @@ def train_net(net,
 
                 imgs = batch['image']
                 true_masks = batch['mask']
+
+                if Pyramid_Loss:
+                    mask3 = resize(true_masks, size//2)
+                    mask2 = resize(mask3, size//4)
+                    mask1 = resize(mask2, size//8)
                 
             
                 
@@ -106,13 +106,33 @@ def train_net(net,
                     'the images are loaded correctly.'
 
                 
-                masks_pred = net(imgs)
-                loss_main = criterion(masks_pred, true_masks)
-                loss_wandb = loss_main
                 
-        
-                loss = loss_main
-                epoch_loss += loss.item()
+                if Pyramid_Loss:
+
+                    masks_pred, mask1_pred, mask2_pred, mask3_pred = net(imgs)
+                    loss_main = criterion(masks_pred, true_masks)
+                    loss_wandb = loss_main
+            
+                    loss = loss_main
+                    epoch_loss += loss.item()
+
+                    loss1 = criterion(mask1_pred, mask1)
+                    loss2 = criterion(mask2_pred, mask2)
+                    loss3 = criterion(mask3_pred, mask3)
+
+                    loss_main = loss_main + 0.75*loss3 + 0.5*loss2  + 0.25*loss1 
+
+
+
+                else:    
+
+                    masks_pred = net(imgs)
+                    loss_main = criterion(masks_pred, true_masks)
+                    loss_wandb = loss_main
+            
+                    loss = loss_main
+                    epoch_loss += loss.item()
+
 
                 
 
@@ -134,7 +154,7 @@ def train_net(net,
                         tag = tag.replace('.', '/')
                         
 
-                    val1, val2, val3, val4, val5, val6, val7, val8, inference_time = eval_dice_IoU_binary(net, test_loader, device, test_counter, save_test, save=False)
+                    val1, val2, val3, val4, val5, val6, val7, val8, inference_time = eval_dice_IoU_binary(net, test_loader, device, test_counter, save_test, save=False, Pyramid_Loss=Pyramid_Loss)
                     
                     print(f'Validation Dice:{val1}')
                     print(f'Validation IoU:{val3}')
@@ -145,7 +165,7 @@ def train_net(net,
                     
 
                     if net.n_classes > 1:
-                         print("NOT IMPLEMENTED")
+                         raise Exception("Not implemented for multi-class segmentation")
                     else:
                         logging.info('Validation Dice Coeff: {}'.format(val1))
                         logging.info('Validation IoU: {}'.format(val3))
@@ -169,7 +189,7 @@ def train_net(net,
                            dir_checkpoint + f'CP_epoch{epoch + 1}.pth')
                 logging.info(f'Checkpoint {epoch + 1} saved !')
             
-    val1, val2, val3, val4, val5, val6, val7, val8, inference_time = eval_dice_IoU_binary(net, test_loader, device, test_counter, save_test, save=True)
+    val1, val2, val3, val4, val5, val6, val7, val8, inference_time = eval_dice_IoU_binary(net, test_loader, device, test_counter, save_test, save=True, Pyramid_Loss=Pyramid_Loss)
     save_metrics(TESTS, csv_name)
      
 
@@ -185,7 +205,7 @@ if __name__ == '__main__':
              Dataset_Path_Train, Dataset_Path_Test,\
                   mask_folder, Results_path, Visualization_path,\
                  CSV_path, project_name, load, load_path, net_name,\
-                      test_per_epoch, Checkpoint_path, Net1\
+                      test_per_epoch, Checkpoint_path, Net1, Pyramid_Loss\
                      = import_config.execute(my_conf)
 
     print("inside main")
@@ -234,7 +254,7 @@ if __name__ == '__main__':
                 create_directory(Results_path + CSV_path)
 
 
-                net = Net1(n_classes=1, n_channels=3)
+                net = Net1(n_classes=1, n_channels=3, bilinear=True, Pyramid_Loss=Pyramid_Loss)
                 logging.info(f'Network:\n'
                              f'\t{net.n_channels} input channels\n'
                              f'\t{net.n_classes} output channels (classes)\n')
@@ -259,7 +279,9 @@ if __name__ == '__main__':
                           epochs=epochs,
                           batch_size=batch_size,
                           lr=Learning_Rates_init[LR],
-                          device=device)
+                          device=device,
+                          Pyramid_Loss=Pyramid_Loss,
+                          size = size)
             
     except KeyboardInterrupt:
         torch.save(net.state_dict(), 'INTERRUPTED.pth')

@@ -5,23 +5,27 @@ Created on Fri Apr  1 15:01:40 2022
 
 @author: negin
 """
-from nets import DeepPyram_Res50 as Net
+from nets import DeepPyram_ResNet50 as Net
 
 Net1 = Net
 
-Categories = ['fold0','fold1','fold2','fold3','fold4']
+# Add the paths to other categories if you have more than one folds for training and evaluation
+Categories = ['fold0']
+
 Learning_Rates_init = [0.005]
 epochs = 40
 batch_size = 4
 size = (512, 512)
 
-Dataset_Path = '../../../../Datasets/Pupil_Iris_Segmentation_Cat3K/five_fold_dataset/'
+Pyramid_Loss=False
+
+Dataset_Path = 'Datasets/DeepPyram/instruments/'
 mask_folder = '/masks/'
-Results_path = '../results/'
-Visualization_path = 'visualization_PupilID/'
-Checkpoint_path = 'checkpoints_PupilID/'
-CSV_path = 'CSVs_PupilID/'
-project_name = "PupilID_V2"
+Results_path = 'results/'
+Visualization_path = 'visualization_DeepPyram/instruments'
+Checkpoint_path = 'checkpoints_DeepPyram/instruments'
+CSV_path = 'CSVs_DeepPyram/instruments'
+project_name = "DeepPyram"
 
 load = False
 load_path = ''

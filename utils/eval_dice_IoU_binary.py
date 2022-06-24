@@ -20,7 +20,7 @@ import timeit
 dice_coeff = Dice()
 jaccard_index = IoU()
 
-def eval_dice_IoU_binary(net, loader, device, test_counter, save_dir, save=True):
+def eval_dice_IoU_binary(net, loader, device, test_counter, save_dir, save=True, Pyramid_Loss=True):
     """Evaluation without the densecrf with the dice coefficient"""
     net.eval()
     
@@ -43,32 +43,26 @@ def eval_dice_IoU_binary(net, loader, device, test_counter, save_dir, save=True)
 
 
             start = timeit.default_timer()
+
             with torch.no_grad():
-                mask_pred = net(imgs)
+                if Pyramid_Loss:
+                    mask_pred, NI1, NI2, NI3 = net(imgs)
+                else:
+                    mask_pred = net(imgs)
+                    
             stop = timeit.default_timer()
             Inference_time.append(stop - start)
 
 
             if net.n_classes > 1:
-                tot += F.cross_entropy(mask_pred, true_masks).item()
+                raise Exception("Not implemented for multi-class segmentation")
             else:
-                # pred = torch.sigmoid(mask_pred)
-                # pred = (pred > 0.5).float()
-
-                # print('pred min', torch.min(pred))
-                # print('pred max', torch.max(pred))
-
-                # print('GT min', torch.min(true_masks))
-                # print('GT max', torch.max(true_masks))
 
                 val_Dice = dice_coeff(mask_pred, true_masks).item()
                 val_IoU = jaccard_index(mask_pred, true_masks).item()
 
                 dice.append(val_Dice)
                 IoU.append(val_IoU)
-
-                # print(f'Dice_Test: {val_Dice}')
-                # print(f'IoU_Test: {val_IoU}')
 
                 pbar.set_postfix(**{'val_Dice (batch)': val_Dice})
                 pbar.set_postfix(**{'val_IoU (batch)': val_IoU})
