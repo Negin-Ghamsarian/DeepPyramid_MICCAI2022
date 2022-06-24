@@ -8,7 +8,7 @@ import torch
 from torchvision.ops import DeformConv2d
 
 
-from NetModules_utils import *
+from .NetModules_utils import *
 class DeepPyram_VGG16(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True, Pyramid_Loss=True):
         super(DeepPyram_VGG16, self).__init__()
