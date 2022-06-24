@@ -1,6 +1,6 @@
 # DeepPyram_MICCAI2022
 
-This repository provides the official PyTorch implementation of DeepPyram (Pyramid View and Deformable Pyramid Reception).
+This repository provides the official PyTorch implementation of DeepPyram (Pyramid View Fusion and Deformable Pyramid Reception).
 
 DeepPyram is initially proposed for semantic segmentation in cataract surgery videos, but can be adopted for any medical or general purpose image segmentation problem.
 
