@@ -22,13 +22,14 @@ class import_config():
         net_name = module_name.net_name
         test_per_epoch = module_name.test_per_epoch
         Net1 = module_name.Net1
+        Pyramid_Loss = module_name.Pyramid_Loss
         
 
         return Categories,Learning_Rates_init, epochs, batch_size, size,\
              Dataset_Path_Train, Dataset_Path_Test,\
                   mask_folder, Results_path, Visualization_path,\
                  CSV_path, project_name, load, load_path, net_name,\
-                      test_per_epoch, Checkpoint_path, Net1
+                      test_per_epoch, Checkpoint_path, Net1, Pyramid_Loss
                          
         
            
