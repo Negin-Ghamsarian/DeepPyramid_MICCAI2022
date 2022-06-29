@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Implementation of DeepPyram, MICCAI 2022, with VGG16 backbone
+# Implementation of DeepPyramid, MICCAI 2022, with VGG16 backbone
 from __future__ import absolute_import 
 import torchvision.models as models
 from torchsummary import summary
