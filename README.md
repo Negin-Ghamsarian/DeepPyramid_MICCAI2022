@@ -1,10 +1,10 @@
-# DeepPyram_MICCAI2022
+# DeepPyramid_MICCAI2022
 
-This repository provides the official PyTorch implementation of DeepPyram (Pyramid View Fusion and Deformable Pyramid Reception).
+This repository provides the official PyTorch implementation of DeepPyramid (Pyramid View Fusion and Deformable Pyramid Reception).
 
-DeepPyram is initially proposed for semantic segmentation in cataract surgery videos, but can be adopted for any medical or general purpose image segmentation problem.
+DeepPyramid is initially proposed for semantic segmentation in cataract surgery videos, but can be adopted for any medical or general purpose image segmentation problem.
 
-Our proposed network, {\it DeepPyram}, introduces three key contributions: (i) a Pyramid View Fusion (PVF) module allowing a varying-angle surrounding view of the feature maps for each pixel position, (ii) a Deformable Pyramid Reception (DPR) module, which enables a large, sparse, and learnable receptive field to perform shape-wise feature extraction (see Fig.~\ref{fig: Problems}-b), and (iii) a Pyramid Loss, ($P\mathcal{L}$) to explicitly supervise multi-scale semantic feature maps in our network.
+Our proposed network, {\it DeepPyramid}, introduces three key contributions: (i) a Pyramid View Fusion (PVF) module allowing a varying-angle surrounding view of the feature maps for each pixel position, (ii) a Deformable Pyramid Reception (DPR) module, which enables a large, sparse, and learnable receptive field to perform shape-wise feature extraction (see Fig.~\ref{fig: Problems}-b), and (iii) a Pyramid Loss, ($P\mathcal{L}$) to explicitly supervise multi-scale semantic feature maps in our network.
 
 ---
 
@@ -18,11 +18,11 @@ Conversely, our DPR module hinges on a novel deformable block based on dilated c
 
 ---
 
-**Overall architecture of the proposed DeepPyram network.**
+**Overall architecture of the proposed DeepPyramid network.**
 
 Using a U-Net-based architecture, our proposed model is illustrated below. At its core, the encoder network remains that of a standard VGG16 network. Our approach is to provide useful decoder modules to help alleviate segmentation concerning relevant objects' features in cataract surgery. Specifically, we propose a Pyramid View Fusion (PVF) module and a Deformable Pyramid Reception (DPR) module. These are then trained using a dedicated Pyramid Loss ($P\mathcal{L}$). 
 
-<img src="./Figures/BD.png" alt="Overall architecture of the proposed DeepPyram network." width="1000">
+<img src="./Figures/BD.png" alt="Overall architecture of the proposed DeepPyramid network." width="1000">
 
 ---
 
