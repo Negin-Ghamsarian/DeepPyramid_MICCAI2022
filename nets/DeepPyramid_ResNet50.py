@@ -1,4 +1,4 @@
-# Implementation of DeepPyram, MICCAI 2022, with ResNet50 backbone
+# Implementation of DeepPyramid, MICCAI 2022, with ResNet50 backbone
 from __future__ import absolute_import 
 import torchvision.models as models
 from torchsummary import summary
