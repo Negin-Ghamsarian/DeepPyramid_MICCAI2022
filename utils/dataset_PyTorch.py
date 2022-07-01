@@ -104,8 +104,3 @@ class BasicDataset(Dataset):
             'mask': mask.type(torch.cuda.FloatTensor),
             'name': str(self.ids[i])
         }
-
-
-class CarvanaDataset(BasicDataset):
-    def __init__(self, imgs_dir, masks_dir, scale=1):
-        super().__init__(imgs_dir, masks_dir, scale, mask_suffix='_mask')
