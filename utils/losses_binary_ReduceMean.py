@@ -39,7 +39,7 @@ class DiceLoss(nn.Module):
 
         # assert torch.max(inputs)>1 or torch.min(inputs)<0 or torch.max(targets)>1 or torch.min(targets)<0, \
         #     f'Inputs and targets should be in range of [0,1]'
-        inputs = (inputs>0.5).int()  
+         
         
         #flatten label and prediction tensors
         # inputs = inputs.view(-1)
@@ -123,7 +123,7 @@ class IoULoss(nn.Module):
         
         # assert torch.max(inputs)>1 or torch.min(inputs)<0 or torch.max(targets)>1 or torch.min(targets)<0, \
         #     f'Inputs and targets should be in range of [0,1]'  
-        inputs = (inputs>0.5).int()
+        
         #flatten label and prediction tensors
         # inputs = inputs.view(-1)
         # targets = targets.view(-1)
