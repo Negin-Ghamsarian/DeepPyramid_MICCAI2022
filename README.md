@@ -58,14 +58,14 @@ and average values are not visible due to y-axis clipping).**
 If you use AdaptNet for your research, please cite our paper:
 
 ```
-@INPROCEEDINGS{DeepPyram,
-  author={N. {Ghamsarian} and M. {Taschwer} and R. {Sznitman} and K. {Schoeffmann}},
-  booktitle={25th International Conference on Medical Image Computing \& Computer Assisted Interventions (MICCAI 2021)}, 
-  title={DeepPyram: Enabling Pyramid View and Deformable Pyramid Reception for Semantic Segmentation in Cataract Surgery Videos}, 
+@inproceedings{ghamsarian2022deeppyramid,
+  title={DeepPyramid: Enabling Pyramid View and Deformable Pyramid Reception for Semantic Segmentation in Cataract Surgery Videos},
+  author={Ghamsarian, Negin and Taschwer, Mario and Sznitman, Raphael and Schoeffmann, Klaus},
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={276--286},
   year={2022},
-  volume={},
-  number={},
-  pages={to appear},}
+  organization={Springer}
+}
 ```
 
 ## Acknowledgments
