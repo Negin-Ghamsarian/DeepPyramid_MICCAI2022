@@ -55,7 +55,7 @@ and average values are not visible due to y-axis clipping).**
 
 
 ## Citation
-If you use AdaptNet for your research, please cite our paper:
+If you use DeepPyramid for your research, please cite our paper:
 
 ```
 @inproceedings{ghamsarian2022deeppyramid,
